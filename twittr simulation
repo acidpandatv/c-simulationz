@@ -1,0 +1,151 @@
+#include <stdio.h>
+#include <string.h>
+
+/*READ ME*/
+
+/*the goal of this little program is to create a simulation of old twittr*/
+
+/*we will do so by prompting "post a tweet!" after the 'tweeter' has successfully logged in.
+We use a while loop that takes us back to the beginning if the tweeter successfully signs up for an acct,
+and then when the tweeter logs in and postz the tweet, you will see it display on the console.
+It should be a very, very simple program.*/
+
+/*FOR RETURN VALUEZ:
+1 = SUCCESS
+0 = FAILURE*/
+
+/*declaring an Account struct to store our username and password data*/
+struct Account {
+
+char username[20];
+char password[20];
+
+};
+/*function declarations*/
+int signUp(struct Account *Account);
+int signIn(struct Account *Account);
+
+int main()
+
+{
+
+    struct Account tweeter; /*we are calling the Account "tweeter"*/
+    char tweet[50]; /*our max number of characterz per tweet*/
+    int answer; /*the tweeter's input for the home screen*/
+
+/*HOME SCREEN*/
+
+while(1)
+{
+
+    printf("Signup for an account (0), login (1), or exit (2).\n");
+    scanf("%i", &answer);
+    getchar(); /*consumes the newline that blocks us from getting a username and password*/
+
+
+    /*if they choose to signup*/
+    if (answer == 0)
+    {
+        signUp(&tweeter);
+        printf("Your account was successfully created.\n");
+        continue;
+            
+    }
+
+/*if they choose to sign in they must verify that their username and password are correct*/
+    if (answer == 1)
+    {
+        if (signIn(&tweeter))
+            {
+                printf("Post a tweet (in 50 characterz or less)!\n");
+                    fgets(tweet, 50, stdin);
+                    /*trim newlines*/
+                    printf("You posted %s\n", tweet);
+                    return(1);
+            }
+
+        continue;
+
+    }
+
+/*for the purposes of exiting the twitter simulation*/
+    if (answer == 2)
+    {
+        printf("You've officially exited the twitter simulation.\n");
+        break;
+        return 1;
+    }
+/*if they give any answer outside the variables, return this and take them back to HOME*/
+    else {
+        printf("That's not an answer.\n");
+        continue;
+    }
+
+}
+
+   
+}
+
+ /*account signup function*/
+
+int signUp(struct Account *Account)
+{
+/*the goal of this function is to point and store data to our Account struct*/   
+
+            printf("Username:");
+            fgets(Account->username, 20, stdin);
+            Account->username[strcspn(Account->username, "\n")] = '\0';
+
+            printf("Password:");
+            fgets(Account->password, 20, stdin);
+            Account->password[strcspn(Account->password, "\n")] = '\0';
+
+            printf("Account signup successful.\n"); 
+
+            return 1;
+
+}
+
+/*our account sign in function*/
+int signIn(struct Account *Account)
+{
+
+    char inputUsername[20];
+    char inputPassword[20];
+
+    printf("Sign in:\n"); /*prompt*/
+    printf("Username:");
+
+        fgets(inputUsername, 20, stdin);
+        inputUsername[strcspn(inputUsername, "\n")] = '\0';
+
+        /*verify acct*/
+        if (strcmp(Account->username, inputUsername) == 0)
+        {
+            /*verify password now that it checkz out to be tru*/
+            printf("Password:");
+            fgets(inputPassword, 20, stdin);
+            inputPassword[strcspn(inputPassword, "\n")] = '\0';
+
+            if (strcmp(Account->password, inputPassword) == 0)
+            {
+                printf("Successful sign in. \n");
+                return 1;
+            }
+            else
+            {
+                printf("Incorrect password.\n");
+                return 0;
+            }
+
+        }
+        else{
+            printf("Invalid login.\n");
+            return 0;
+        }
+
+        printf("Account sign in successful.\n"); 
+        
+        return 1;
+
+}
